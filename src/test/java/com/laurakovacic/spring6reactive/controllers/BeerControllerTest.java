@@ -1,10 +1,14 @@
 package com.laurakovacic.spring6reactive.controllers;
 
+import com.laurakovacic.spring6reactive.model.BeerDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+
+import static com.laurakovacic.spring6reactive.controllers.BeerController.BEER_PATH;
+import static com.laurakovacic.spring6reactive.controllers.BeerController.BEER_PATH_ID;
 
 
 @SpringBootTest
@@ -16,10 +20,19 @@ class BeerControllerTest {
 
     @Test
     void listBeers() {
-        webTestClient.get().uri(BeerController.BEER_PATH)
+        webTestClient.get().uri(BEER_PATH)
                 .exchange()
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-type", "application/json")
                 .expectBody().jsonPath("$.size()").isEqualTo(3);
+    }
+
+    @Test
+    void getBeerById() {
+        webTestClient.get().uri(BEER_PATH_ID, 1)
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().valueEquals("Content-type", "application/json")
+                .expectBody(BeerDTO.class);
     }
 }
