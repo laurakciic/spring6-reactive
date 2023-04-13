@@ -2,7 +2,9 @@ package com.laurakovacic.spring6reactive.controllers;
 
 import com.laurakovacic.spring6reactive.model.BeerDTO;
 import com.laurakovacic.spring6reactive.repositories.BeerRepositoryTest;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,7 +14,7 @@ import reactor.core.publisher.Mono;
 import static com.laurakovacic.spring6reactive.controllers.BeerController.BEER_PATH;
 import static com.laurakovacic.spring6reactive.controllers.BeerController.BEER_PATH_ID;
 
-
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest
 @AutoConfigureWebTestClient
 class BeerControllerTest {
@@ -30,6 +32,7 @@ class BeerControllerTest {
     }
 
     @Test
+//    @Order(1)
     void getBeerById() {
         webTestClient.get().uri(BEER_PATH_ID, 1)
                 .exchange()
