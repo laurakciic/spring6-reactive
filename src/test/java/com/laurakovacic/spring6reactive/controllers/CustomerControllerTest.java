@@ -1,6 +1,7 @@
 package com.laurakovacic.spring6reactive.controllers;
 
 
+import com.laurakovacic.spring6reactive.domain.Customer;
 import com.laurakovacic.spring6reactive.model.BeerDTO;
 import com.laurakovacic.spring6reactive.model.CustomerDTO;
 import com.laurakovacic.spring6reactive.repositories.CustomerRepositoryTest;
@@ -42,6 +43,14 @@ class CustomerControllerTest {
     }
 
     @Test
+    void getCustomerIdNotFound() {
+        webTestClient.get()
+                .uri(CUSTOMER_PATH_ID, 999)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     void createCustomer() {
         webTestClient.post()
                 .uri(CUSTOMER_PATH)
@@ -50,6 +59,19 @@ class CustomerControllerTest {
                 .exchange()
                 .expectStatus().isCreated()
                 .expectHeader().location("http://localhost:8080/api/v2/customer/4");
+    }
+
+    @Test
+    void createCustomerBadRequest() {
+        Customer testCustomer = CustomerRepositoryTest.getTestCustomer();
+        testCustomer.setCustomerName("");
+
+        webTestClient.post()
+                .uri(CUSTOMER_PATH)
+                .body(Mono.just(testCustomer), CustomerDTO.class)
+                .header("Content-Type", "application/json")
+                .exchange()
+                .expectStatus().isBadRequest();
     }
 
     @Test
@@ -62,10 +84,47 @@ class CustomerControllerTest {
     }
 
     @Test
+    void updateCustomerBadRequest() {
+        Customer testCustomer = CustomerRepositoryTest.getTestCustomer();
+        testCustomer.setCustomerName("");
+
+        webTestClient.put()
+                .uri(CUSTOMER_PATH_ID, 1)
+                .body(Mono.just(testCustomer), CustomerDTO.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void updateCustomerIdNotFound() {
+        webTestClient.put()
+                .uri(CUSTOMER_PATH_ID, 999)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void patchCustomerIdNotFound() {
+        webTestClient.patch()
+                .uri(CUSTOMER_PATH_ID, 999)
+                .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
     void deleteCustomer() {
         webTestClient.delete()
                 .uri(CUSTOMER_PATH_ID, 1)
                 .exchange()
                 .expectStatus().isNoContent();
+    }
+
+    @Test
+    void deleteCustomerIdNotFound() {
+        webTestClient.delete()
+                .uri(CUSTOMER_PATH_ID, 999)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 }
