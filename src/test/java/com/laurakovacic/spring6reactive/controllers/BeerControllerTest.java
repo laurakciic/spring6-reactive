@@ -1,11 +1,13 @@
 package com.laurakovacic.spring6reactive.controllers;
 
 import com.laurakovacic.spring6reactive.model.BeerDTO;
+import com.laurakovacic.spring6reactive.repositories.BeerRepositoryTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
 
 import static com.laurakovacic.spring6reactive.controllers.BeerController.BEER_PATH;
 import static com.laurakovacic.spring6reactive.controllers.BeerController.BEER_PATH_ID;
@@ -34,5 +36,15 @@ class BeerControllerTest {
                 .expectStatus().isOk()
                 .expectHeader().valueEquals("Content-type", "application/json")
                 .expectBody(BeerDTO.class);
+    }
+
+    @Test
+    void createBeer() {
+        webTestClient.post().uri(BEER_PATH)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .header("Content-Type", "application/json")
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().location("http://localhost:8080/api/v2/beer/4");
     }
 }
