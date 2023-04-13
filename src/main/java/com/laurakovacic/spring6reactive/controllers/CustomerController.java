@@ -43,7 +43,7 @@ public class CustomerController {
 
         customerService.updateCustomer(customerId, customerDTO).subscribe();
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(CUSTOMER_PATH_ID)
@@ -51,7 +51,7 @@ public class CustomerController {
                                              @Validated @RequestBody CustomerDTO customerDTO) {
 
         return customerService.patchCustomer(customerId, customerDTO)
-                .map(patchedCustomer -> ResponseEntity.ok().build());
+                .map(patchedCustomer -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping(CUSTOMER_PATH_ID)

@@ -43,7 +43,7 @@ public class BeerController {
 
         beerService.updateBeer(beerId, beerDTO).subscribe();
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping(BEER_PATH_ID)
@@ -51,7 +51,7 @@ public class BeerController {
                                                  @Validated @RequestBody BeerDTO beerDTO) {
 
         return beerService.patchBeer(beerId, beerDTO)
-                .map(patchedBeer -> ResponseEntity.ok().build());
+                .map(patchedBeer -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping(BEER_PATH_ID)
