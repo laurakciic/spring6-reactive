@@ -60,7 +60,7 @@ class BeerControllerTest {
     }
 
     @Test
-    void createBeerBadData() {
+    void createBeerBadDRequest() {
         Beer testBeer = BeerRepositoryTest.getTestBeer();
         testBeer.setBeerName("");
 
@@ -91,8 +91,16 @@ class BeerControllerTest {
     }
 
     @Test
-    void updateBeerNotFound() {
+    void updateBeerIdNotFound() {
         webTestClient.put().uri(BEER_PATH_ID, 999)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void patchBeerIdNotFound() {
+        webTestClient.patch().uri(BEER_PATH_ID, 999)
                 .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
                 .exchange()
                 .expectStatus().isNotFound();

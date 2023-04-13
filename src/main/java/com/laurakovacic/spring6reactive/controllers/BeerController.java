@@ -54,6 +54,7 @@ public class BeerController {
                                                  @Validated @RequestBody BeerDTO beerDTO) {
 
         return beerService.patchBeer(beerId, beerDTO)
+                .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
                 .map(patchedBeer -> ResponseEntity.noContent().build());
     }
 
