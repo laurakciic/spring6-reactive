@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Import;
 
 @DataR2dbcTest
 @Import(DatabaseConfig.class)
-class CustomerRepositoryTest {
+public class CustomerRepositoryTest {
 
     @Autowired
     CustomerRepository customerRepository;
@@ -29,7 +29,7 @@ class CustomerRepositoryTest {
                 .subscribe(System.out::println);
     }
 
-    Customer getTestCustomer() {
+    public static Customer getTestCustomer() {
         return Customer.builder()
                 .customerName("Customer1")
                 .build();
